@@ -97,6 +97,15 @@ class Usuario:
     def agregar_residuo(self, residuo):
         self.historial_residuos.append(residuo)
 
+# si tu marido no te quiere quiere veivi 
+    def mostrar_informacion(self):
+        print(f"Nombre del Titular:{self.nombre} ")
+        print(f"Número de integrantes de la familia: {self.n_integrantes}")
+        print(f"Dirección: {self.direccion}")
+        print(f"Puntos acumulados: {self.puntos}")  
+
+    
+
 # Diccionario de residuos
 residuos = {
     "Papel": {"Precio por kilo $": 500 , "Puntos por kilo": 50, "Recomendacion": "Debe estar limpio y seco."},
@@ -151,29 +160,31 @@ while True:
         if not usuarios:
             print("Primero debe registrar un usuario (opción 1).")
             continue
-
+        #papu deja el maincraft papu
         usuario = usuarios[0]
-        print("\nInformación del titular registrada:")
-        print(f"Nombre del titular: {usuario.get_nombre()}")
-        print(f"Número de integrantes de la familia: {usuario.get_n_integrantes()}")
-        print(f"Dirección: {usuario.get_direccion()}")
+        print("\n" + "="*60)
+        print("      INFORMACIÓN DEL USUARIO".center(60))
+        print("="*60)
+        usuario.mostrar_informacion()
 
         if not usuario.nombres_integrantes:
             respuesta = input("¿Desea ingresar nombres de los integrantes? (si/no): ").lower()
             if respuesta == "si":
                 for i in range(1, usuario.get_n_integrantes() + 1):
                     nombre = input(f"Nombre del integrante {i}: ")
-                    usuario.nombres_integrantes.append(nombre)
+                    #parce yo puse la listan en privado xdxdxddx si llega a buguear sera porque no esta instanciada :wejasdiqwdas
+                    usuario.__nombres_integrantes.append(nombre)
 
         if not usuario.id_titular:
             respuesta = input("¿Desea ingresar el documento del titular? (si/no): ").lower()
             if respuesta == "si":
                 usuario.id_titular = input("Ingrese el número de documento del titular: ")
-
-        print("\nResumen:")
-        print(f"Titular: {usuario.get_nombre()}")
-        print(f"Número de integrantes: {usuario.get_n_integrantes()}")
-        print(f"Dirección: {usuario.get_direccion()}")
+#para esto sirve los metodos bro <]:{v
+        print("\n" + "="*60)
+        print("      Resumen".center(60))
+        print("="*60)
+        usuario.mostrar_informacion()
+        
         if usuario.nombres_integrantes:
             for i, nombre in enumerate(usuario.nombres_integrantes, 1):
                 print(f" - Integrante {i}: {nombre}")
