@@ -104,6 +104,18 @@ class Usuario:
         print(f"Dirección: {self.direccion}")
         print(f"Puntos acumulados: {self.puntos}")  
 
+
+#agrege un metodo para mostrar el historial de residuos
+    def mostrar_historial_residuos(self):
+        if not self.historial_residuos:
+            return print("No hay residuos registrados.")
+        else:
+            print("\nHistorial de residuos:")
+            for residuo in self.historial_residuos:
+                print(f"Tipo: {residuo.get_tipo()}, Peso: {residuo.get_peso()} kg, Puntos: {residuo.calcular_puntos()}")
+            print("="*60)
+
+
     
 
 # Diccionario de residuos
@@ -173,7 +185,7 @@ while True:
                 for i in range(1, usuario.get_n_integrantes() + 1):
                     nombre = input(f"Nombre del integrante {i}: ")
                     #parce yo puse la listan en privado xdxdxddx si llega a buguear sera porque no esta instanciada :wejasdiqwdas
-                    usuario.__nombres_integrantes.append(nombre)
+                    usuario.nombres_integrantes.append(nombre)
 
         if not usuario.id_titular:
             respuesta = input("¿Desea ingresar el documento del titular? (si/no): ").lower()
@@ -198,11 +210,14 @@ while True:
 
         usuario = usuarios[0]
         mostrar_informacion_residuos()
-        tipo_residuo = input("Ingrese el tipo de residuo: ").strip()
+        residuos_lower = {k.lower(): k for k in residuos.keys()}
+        tipo_residuo_input = input("Ingrese el tipo de residuo: ").strip().lower()
 
-        if tipo_residuo not in residuos:
+        if tipo_residuo_input not in residuos_lower:
             print("Tipo de residuo no válido.")
             continue
+
+        tipo_residuo = residuos_lower[tipo_residuo_input]
 
         try:
             peso = float(input("Ingrese el peso (kg): "))
@@ -228,9 +243,20 @@ while True:
 
         print("\n✅ Registro exitoso:")
         print(f"Titular: {usuario.get_nombre()}")
-        print(f"Material: {tipo_residuo}")
+        print(f"Material: {tipo_residuo_input}")
         print(f"Peso: {peso} kg")
         print(f"Puntos obtenidos: {int(puntos_totales)}")
+    #funciona gracias al metodo de la clase usuario
+    elif opcion == "4":
+        if not usuarios:
+            print("Primero debe registrar un usuario (opción 1).")
+            continue
+        usuario = usuarios[0]
+        print("\n" + "="*60)
+        print("      MATERIALES INGRESADOS POR EL USUARIO".center(60))
+        print("="*60)
+        usuario.mostrar_historial_residuos()
+        print(f"Puntos totales acumulados: {usuario.get_puntos()}")
 
     elif opcion == "5":
         print("Saliendo del sistema...")
