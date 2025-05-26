@@ -1,4 +1,10 @@
 from abc import ABC, abstractmethod
+import unicodedata
+
+# Importé esto para no afectar la gramática de las salidas por pantalla jeje
+def quitar_tildes(texto):
+    return ''.join(c for c in unicodedata.normalize('NFD', texto)
+                   if unicodedata.category(c) != 'Mn')
 
 # Clase base abstracta
 class Residuo(ABC):
@@ -31,19 +37,19 @@ class Papel(Residuo):
 
 class Carton(Residuo):
     def __init__(self, peso):
-        super().__init__("Carton", peso)
+        super().__init__("Cartón", peso)
     def calcular_puntos(self):
         return self.peso * 50
 
 class PlasticoPET(Residuo):
     def __init__(self, peso):
-        super().__init__("Plastico PET", peso)
+        super().__init__("Plástico PET", peso)
     def calcular_puntos(self):
         return self.peso * 140
 
 class PlasticoHDPE(Residuo):
     def __init__(self, peso):
-        super().__init__("Plastico HDPE", peso)
+        super().__init__("Plástico HDPE", peso)
     def calcular_puntos(self):
         return self.peso * 115
 
@@ -96,38 +102,32 @@ class Usuario:
     
     def agregar_residuo(self, residuo):
         self.historial_residuos.append(residuo)
-
-# si tu marido no te quiere quiere veivi 
+    # si tu marido no te quiere quiere veivi 
     def mostrar_informacion(self):
-        print(f"Nombre del Titular:{self.nombre} ")
+        print(f"Nombre del Titular: {self.nombre}")
         print(f"Número de integrantes de la familia: {self.n_integrantes}")
         print(f"Dirección: {self.direccion}")
         print(f"Puntos acumulados: {self.puntos}")  
-
-
-#agrege un metodo para mostrar el historial de residuos
+#agregué un metodo para mostrar el historial de residuos
     def mostrar_historial_residuos(self):
         if not self.historial_residuos:
-            return print("No hay residuos registrados.")
+            return print("No hay nada registrado.")
         else:
-            print("\nHistorial de residuos:")
+            print("\nHistorial de materiales ingresados:")
             for residuo in self.historial_residuos:
                 print(f"Tipo: {residuo.get_tipo()}, Peso: {residuo.get_peso()} kg, Puntos: {residuo.calcular_puntos()}")
             print("="*60)
 
-
-    
-
 # Diccionario de residuos
 residuos = {
-    "Papel": {"Precio por kilo $": 500 , "Puntos por kilo": 50, "Recomendacion": "Debe estar limpio y seco."},
-    "Carton": {"Precio por kilo $": 500 , "Puntos por kilo": 50, "Recomendacion": "Debe estar limpio y seco."},
-    "Plastico PET": {"Precio por kilo $": 1400 , "Puntos por kilo": 140, "Recomendacion": "Debe estar limpio y seco."},
-    "Plastico HDPE": {"Precio por kilo $": 1150 , "Puntos por kilo": 115, "Recomendacion": "Debe estar limpio y seco."},
-    "Vidrio": {"Precio por kilo $": 300 , "Puntos por kilo": 30, "Recomendacion": "Debe estar limpio y seco."},
-    "Metal Aluminio": {"Precio por kilo $": 3500 , "Puntos por kilo": 350, "Recomendacion": "Debe estar limpio y seco."},
-    "Metal Cobre": {"Precio por kilo $": 17500 , "Puntos por kilo": 1750, "Recomendacion": "Debe estar limpio y seco."},
-    "Tetra Pack": {"Precio por kilo $": 400 , "Puntos por kilo": 40, "Recomendacion": "Debe estar limpio y seco."}
+    "Papel": {"Precio por kilo $": 500 , "Puntos por kilo": 50, "Recomendación": "Debe estar limpio y seco."},
+    "Cartón": {"Precio por kilo $": 500 , "Puntos por kilo": 50, "Recomendación": "Debe estar limpio y seco."},
+    "Plástico PET": {"Precio por kilo $": 1400 , "Puntos por kilo": 140, "Recomendación": "Debe estar limpio y seco."},
+    "Plástico HDPE": {"Precio por kilo $": 1150 , "Puntos por kilo": 115, "Recomendación": "Debe estar limpio y seco."},
+    "Vidrio": {"Precio por kilo $": 300 , "Puntos por kilo": 30, "Recomendación": "Debe estar limpio y seco."},
+    "Metal Aluminio": {"Precio por kilo $": 3500 , "Puntos por kilo": 350, "Recomendación": "Debe estar limpio y seco."},
+    "Metal Cobre": {"Precio por kilo $": 17500 , "Puntos por kilo": 1750, "Recomendación": "Debe estar limpio y seco."},
+    "Tetra Pack": {"Precio por kilo $": 400 , "Puntos por kilo": 40, "Recomendación": "Debe estar limpio y seco."}
 }
 
 # Mostrar tabla de residuos
@@ -140,7 +140,7 @@ def mostrar_informacion_residuos():
     for tipo, datos in residuos.items():
         puntos = datos["Puntos por kilo"]
         precio = datos["Precio por kilo $"]
-        recomendacion = datos["Recomendacion"]
+        recomendacion = datos["Recomendación"]
         print(f"{tipo:<18} {puntos:<12} {precio:<15} {recomendacion}")
     print("="*60 + "\n")
 
@@ -161,7 +161,7 @@ while True:
         nombre = input("Ingrese el nombre del usuario representante: ")
         try:
             n_integrantes = int(input("Ingrese el número adicional de integrantes de su familia: "))
-            direccion = input("Ingrese la dirección de su grupo familiar: ")
+            direccion = input("Ingrese su domicilo correspondiente: ")
             nuevo_usuario = Usuario(nombre, n_integrantes, direccion) 
             usuarios.append(nuevo_usuario)
             print(f"El usuario {nombre} fue agregado con éxito.")
@@ -172,6 +172,7 @@ while True:
         if not usuarios:
             print("Primero debe registrar un usuario (opción 1).")
             continue
+
         #papu deja el maincraft papu
         usuario = usuarios[0]
         print("\n" + "="*60)
@@ -179,19 +180,18 @@ while True:
         print("="*60)
         usuario.mostrar_informacion()
 
-        if not usuario.nombres_integrantes:
-            respuesta = input("¿Desea ingresar nombres de los integrantes? (si/no): ").lower()
+        if usuario.get_n_integrantes() > 0 and not usuario.nombres_integrantes:
+            respuesta = input("¿Desea ingresar nombres de los integrantes de su familia? (si/no): ").lower()
             if respuesta == "si":
                 for i in range(1, usuario.get_n_integrantes() + 1):
                     nombre = input(f"Nombre del integrante {i}: ")
-                    #parce yo puse la listan en privado xdxdxddx si llega a buguear sera porque no esta instanciada :wejasdiqwdas
                     usuario.nombres_integrantes.append(nombre)
 
         if not usuario.id_titular:
             respuesta = input("¿Desea ingresar el documento del titular? (si/no): ").lower()
             if respuesta == "si":
                 usuario.id_titular = input("Ingrese el número de documento del titular: ")
-#para esto sirve los metodos bro <]:{v
+        #para esto sirve los metodos bro <]:{v
         print("\n" + "="*60)
         print("      Resumen".center(60))
         print("="*60)
@@ -210,14 +210,15 @@ while True:
 
         usuario = usuarios[0]
         mostrar_informacion_residuos()
-        residuos_lower = {k.lower(): k for k in residuos.keys()}
+        residuos_normalizados = {quitar_tildes(k.lower()): k for k in residuos.keys()}
         tipo_residuo_input = input("Ingrese el tipo de residuo: ").strip().lower()
+        tipo_residuo_normalizado = quitar_tildes(tipo_residuo_input)
 
-        if tipo_residuo_input not in residuos_lower:
-            print("Tipo de residuo no válido.")
+        if tipo_residuo_normalizado not in residuos_normalizados:
+            print("Ingrese un material que esté en la lista.")
             continue
 
-        tipo_residuo = residuos_lower[tipo_residuo_input]
+        tipo_residuo = residuos_normalizados[tipo_residuo_normalizado]
 
         try:
             peso = float(input("Ingrese el peso (kg): "))
@@ -225,25 +226,26 @@ while True:
                 print("El peso no puede ser negativo.")
                 continue
         except ValueError:
-            print("Peso inválido.")
+            print("El peso no es lógico.")
             continue
 
         puntos_kilo = residuos[tipo_residuo]["Puntos por kilo"]
         puntos_totales = peso * puntos_kilo
 
         clases = {
-            "Papel": Papel, "Carton": Carton, "Plastico PET": PlasticoPET,
-            "Plastico HDPE": PlasticoHDPE, "Vidrio": Vidrio,
+            "Papel": Papel, "Cartón": Carton, "Plástico PET": PlasticoPET,
+            "Plástico HDPE": PlasticoHDPE, "Vidrio": Vidrio,
             "Metal Aluminio": MetalAluminio, "Metal Cobre": MetalCobre,
             "Tetra Pack": TetraPack
         }
+
         residuo = clases[tipo_residuo](peso)
         usuario.agregar_residuo(residuo)
         usuario.sumar_puntos(residuo.calcular_puntos())
 
         print("\n✅ Registro exitoso:")
         print(f"Titular: {usuario.get_nombre()}")
-        print(f"Material: {tipo_residuo_input}")
+        print(f"Material: {tipo_residuo}")
         print(f"Peso: {peso} kg")
         print(f"Puntos obtenidos: {int(puntos_totales)}")
     #funciona gracias al metodo de la clase usuario
