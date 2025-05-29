@@ -38,7 +38,7 @@ El sistema busca incentivar la clasificación adecuada de residuos reciclables, 
 
 ---
 
-## 📋 Cómo ejecutar el sistema
+## Cómo ejecutar el sistema
 1. Asegúrate de tener Python instalado en tu sistema.
 2. Descarga los archivos del respositorio.
 3. Ejecuta el archivo principal:
