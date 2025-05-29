@@ -3,17 +3,37 @@ import unicodedata
 from modelo import *
 from vista import mostrar_informacion_residuos, residuos
 
+usuarios = []
+
+def seleccionar_usuario():
+    if not usuarios:
+        print("No hay usuarios registrados.")
+        return None
+
+    print("\nUsuarios registrados:")
+    for i, usuario in enumerate(usuarios):
+        print(f"{i + 1}. {usuario.get_nombre()} - {usuario.get_direccion()}")
+    
+    try:
+        seleccion = int(input("Selecciona el número del usuario: ")) - 1
+        if 0 <= seleccion < len(usuarios):
+            return usuarios[seleccion]
+        else:
+            print("Selección inválida.")
+            return None
+    except ValueError:
+        print("Entrada inválida.")
+        return None
+
+
 def quitar_tildes(texto):
     return ''.join(c for c in unicodedata.normalize('NFD', texto)
                    if unicodedata.category(c) != 'Mn')
 
-usuarios = []
-
 def ejecutar_aplicacion():
     while True:
         print("\nBienvenido al sistema de control de reciclaje")
-        if len(usuarios) == 0:
-            print("1. Agregar usuario")
+        print("1. Agregar usuario")
         print("2. Mostrar información del usuario")
         print("3. Añadir material reciclable")
         print("4. Mostrar materiales ingresados por usuario")
@@ -32,11 +52,10 @@ def ejecutar_aplicacion():
                 print("Error: El número de integrantes de tu familia debe ser lógico")
 
         elif opcion == "2":
-            if not usuarios:
-                print("Primero debe registrar un usuario (opción 1).")
+            usuario = seleccionar_usuario()
+            if usuario is None:
                 continue
 
-            usuario = usuarios[0]
             print("\n" + "="*60)
             print("      INFORMACIÓN DEL USUARIO".center(60))
             print("="*60)
@@ -66,11 +85,10 @@ def ejecutar_aplicacion():
                 print(f"Número de documento del titular: {usuario.id_titular}")
 
         elif opcion == "3":
-            if not usuarios:
-                print("Primero debe registrar un usuario (opción 1).")
+            usuario = seleccionar_usuario()
+            if usuario is None:
                 continue
 
-            usuario = usuarios[0]
             mostrar_informacion_residuos()
             residuos_normalizados = {quitar_tildes(k.lower()): k for k in residuos.keys()}
             tipo_residuo_input = input("Ingrese el tipo de residuo: ").strip().lower()
@@ -112,10 +130,10 @@ def ejecutar_aplicacion():
             print(f"Puntos obtenidos: {int(puntos_totales)}")
 
         elif opcion == "4":
-            if not usuarios:
-                print("Primero debe registrar un usuario (opción 1).")
+            usuario = seleccionar_usuario()
+            if usuario is None:
                 continue
-            usuario = usuarios[0]
+
             print("\n" + "="*60)
             print("      MATERIALES INGRESADOS POR EL USUARIO".center(60))
             print("="*60)
